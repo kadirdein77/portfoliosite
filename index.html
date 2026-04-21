@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RobloxUI Designer Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon: #00f5c4;
+      --neon-pink: #ff2d78;
+      --neon-purple: #a855f7;
+      --dark-bg: #080b12;
+      --card-bg: #0d1220;
+      --border: rgba(0,245,196,0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--dark-bg);
+      color: #e2e8f0;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ── Scanline overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Noise texture ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ── FONTS ── */
+    .font-orb { font-family: 'Orbitron', monospace; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Neon glow utilities ── */
+    .neon-text {
+      color: var(--neon);
+      text-shadow: 0 0 8px var(--neon), 0 0 24px rgba(0,245,196,0.4);
+    }
+    .neon-pink-text {
+      color: var(--neon-pink);
+      text-shadow: 0 0 8px var(--neon-pink), 0 0 24px rgba(255,45,120,0.4);
+    }
+    .neon-border {
+      border: 1px solid var(--neon);
+      box-shadow: 0 0 12px rgba(0,245,196,0.2), inset 0 0 12px rgba(0,245,196,0.04);
+    }
+
+    /* ── Animated grid bg ── */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0,245,196,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,196,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 40px; }
+    }
+
+    /* ── Glitch animation ── */
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+    }
+    .glitch::before {
+      color: var(--neon-pink);
+      animation: glitchTop 3s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+    .glitch::after {
+      color: var(--neon);
+      animation: glitchBot 3s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+    @keyframes glitchTop {
+      0%,90%,100% { transform: translateX(0); opacity: 0; }
+      91% { transform: translateX(-4px); opacity: 0.8; }
+      93% { transform: translateX(4px); opacity: 0.6; }
+      95% { transform: translateX(-2px); opacity: 0.8; }
+    }
+    @keyframes glitchBot {
+      0%,86%,100% { transform: translateX(0); opacity: 0; }
+      87% { transform: translateX(4px); opacity: 0.7; }
+      89% { transform: translateX(-4px); opacity: 0.5; }
+      91% { transform: translateX(2px); opacity: 0.7; }
+    }
+
+    /* ── Typewriter ── */
+    .typewriter {
+      overflow: hidden;
+      border-right: 2px solid var(--neon);
+      white-space: nowrap;
+      animation: typing 3s steps(45,end) 0.5s both, blink 0.8s step-end infinite;
+      max-width: 100%;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+    @keyframes blink {
+      0%,100% { border-color: var(--neon); }
+      50%      { border-color: transparent; }
+    }
+
+    /* ── Floating particles ── */
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--neon);
+      border-radius: 50%;
+      animation: float linear infinite;
+      opacity: 0;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-10vh) translateX(60px); opacity: 0; }
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(8,11,18,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 18px;
+      background: rgba(0,245,196,0.08);
+      border: 1px solid rgba(0,245,196,0.3);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--neon);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--neon);
+      box-shadow: 0 0 6px var(--neon);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(1.5); opacity: 0.6; }
+    }
+
+    /* ── CTA Button ── */
+    .btn-neon {
+      position: relative;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 36px;
+      background: transparent;
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      overflow: hidden;
+      transition: color 0.3s, box-shadow 0.3s;
+    }
+    .btn-neon::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--neon);
+      transform: translateX(-105%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      z-index: -1;
+    }
+    .btn-neon:hover { color: #080b12; box-shadow: 0 0 28px rgba(0,245,196,0.5); }
+    .btn-neon:hover::before { transform: translateX(0); }
+
+    .btn-discord {
+      position: relative;
+      display: inline-flex; align-items: center; gap: 14px;
+      padding: 20px 52px;
+      background: transparent;
+      border: 2px solid #5865F2;
+      color: #5865F2;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      overflow: hidden;
+      transition: color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 20px rgba(88,101,242,0.25);
+    }
+    .btn-discord::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: #5865F2;
+      transform: translateX(-105%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      z-index: -1;
+    }
+    .btn-discord:hover { color: #fff; box-shadow: 0 0 48px rgba(88,101,242,0.6); }
+    .btn-discord:hover::before { transform: translateX(0); }
+
+    /* ── Pricing card ── */
+    .pricing-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0,245,196,0.2);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon), transparent);
+      animation: scanLine 3s linear infinite;
+    }
+    @keyframes scanLine {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .pricing-card:hover {
+      border-color: rgba(0,245,196,0.5);
+      box-shadow: 0 0 40px rgba(0,245,196,0.1), 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    /* ── Feature item ── */
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .feature-item:last-child { border-bottom: none; }
+    .check-icon {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      background: rgba(0,245,196,0.1);
+      border: 1px solid rgba(0,245,196,0.4);
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+
+    /* ── Portfolio grid ── */
+    .portfolio-item {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .portfolio-item:hover {
+      border-color: rgba(0,245,196,0.35);
+      transform: translateY(-4px);
+    }
+    .portfolio-item:hover .overlay {
+      opacity: 1;
+    }
+    .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,245,196,0.12), rgba(168,85,247,0.12));
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .portfolio-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #0d1220 0%, #111827 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .portfolio-placeholder::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(45deg, rgba(0,245,196,0.025) 0, rgba(0,245,196,0.025) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(-45deg, rgba(168,85,247,0.025) 0, rgba(168,85,247,0.025) 1px, transparent 1px, transparent 12px);
+    }
+    /* Replace .portfolio-placeholder background-image with your own URL */
+
+    /* ── Section title ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--neon);
+      opacity: 0.7;
+    }
+
+    /* ── Divider ── */
+    .cyber-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--neon), rgba(168,85,247,0.6), transparent);
+      opacity: 0.3;
+    }
+
+    /* ── Corner decorations ── */
+    .corner-tl, .corner-br {
+      position: absolute;
+      width: 14px; height: 14px;
+    }
+    .corner-tl { top: 0; left: 0; border-top: 2px solid var(--neon); border-left: 2px solid var(--neon); }
+    .corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--neon); border-right: 2px solid var(--neon); }
+
+    /* ── Scroll indicator ── */
+    .scroll-line {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .scroll-line span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--neon);
+      letter-spacing: 0.15em;
+      opacity: 0.5;
+    }
+    .scroll-arrow {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--neon), transparent);
+      animation: scrollDown 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollDown {
+      0%,100% { transform: scaleY(1); opacity: 0.6; }
+      50% { transform: scaleY(1.4); opacity: 1; }
+    }
+
+    /* ── Entrance animations ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.45s; }
+    .delay-4 { animation-delay: 0.65s; }
+    .delay-5 { animation-delay: 0.85s; }
+
+    /* ── Stats row ── */
+    .stat-box {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(13,18,32,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ PARTICLES ═══════════════════ -->
+<div id="particles" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;"></div>
+<script>
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    p.style.background = Math.random() > 0.5 ? '#00f5c4' : '#a855f7';
+    container.appendChild(p);
+  }
+</script>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav>
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <span class="font-orb text-sm font-bold neon-text tracking-widest">UI.DEV</span>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#pricing" class="font-mono text-xs text-gray-400 hover:text-white tracking-widest uppercase transition-colors">Pricing</a>
+      <a href="#portfolio" class="font-mono text-xs text-gray-400 hover:text-white tracking-widest uppercase transition-colors">Portfolio</a>
+      <a href="#contact" class="font-mono text-xs text-gray-400 hover:text-white tracking-widest uppercase transition-colors">Contact</a>
+    </div>
+    <a href="https://discord.com/users/411860478655070208" target="_blank" class="btn-neon text-xs py-2 px-5">Hire Me</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero" class="grid-bg relative">
+
+  <!-- ambient blobs -->
+  <div style="position:absolute;top:15%;left:8%;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(0,245,196,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:20%;right:5%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+    <!-- Badge -->
+    <div class="fade-up delay-1 flex justify-center mb-8">
+      <div class="badge"><span class="badge-dot"></span> Available for Work</div>
+    </div>
+
+    <!-- Main headline -->
+    <h1 class="fade-up delay-2 font-orb font-black leading-none mb-6"
+        style="font-size:clamp(2.8rem,8vw,6.5rem);">
+      <span class="block text-white">ROBLOX UI</span>
+      <span class="block glitch neon-text" data-text="DESIGNER">DESIGNER</span>
+    </h1>
+
+    <!-- Typewriter -->
+    <div class="fade-up delay-3 flex justify-center mb-8">
+      <p class="typewriter font-mono text-base md:text-lg text-gray-300"
+         style="max-width:560px;">
+        Designing modern &amp; eye-catching Roblox interfaces.
+      </p>
+    </div>
+
+    <!-- Sub -->
+    <p class="fade-up delay-4 text-gray-500 text-base max-w-xl mx-auto mb-10 leading-relaxed">
+      I craft pixel-perfect, immersive UI experiences for Roblox games — from HUDs and menus to shop systems and inventory screens.
+    </p>
+
+    <!-- CTA -->
+    <div class="fade-up delay-5 flex flex-wrap gap-4 justify-center">
+      <a href="#portfolio" class="btn-neon">View My Work</a>
+      <a href="#pricing" class="btn-neon" style="border-color:#a855f7;color:#a855f7;">See Pricing</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="fade-up delay-5 grid grid-cols-3 gap-px mt-20 max-w-lg mx-auto border border-white/5">
+      <div class="stat-box">
+        <div class="font-orb text-2xl font-black neon-text">50+</div>
+        <div class="font-mono text-xs text-gray-500 mt-1 uppercase tracking-widest">Projects</div>
+      </div>
+      <div class="stat-box">
+        <div class="font-orb text-2xl font-black" style="color:#a855f7;text-shadow:0 0 8px #a855f7;">3K</div>
+        <div class="font-mono text-xs text-gray-500 mt-1 uppercase tracking-widest">Robux/Frame</div>
+      </div>
+      <div class="stat-box">
+        <div class="font-orb text-2xl font-black neon-pink-text">24H</div>
+        <div class="font-mono text-xs text-gray-500 mt-1 uppercase tracking-widest">Delivery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-line">
+    <span>SCROLL</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<div class="cyber-divider"></div>
+
+<!-- ═══════════════════ PRICING ═══════════════════ -->
+<section id="pricing" class="py-28 px-6">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">// 02 — Pricing</div>
+      <h2 class="font-orb font-bold text-white" style="font-size:clamp(1.8rem,4vw,3rem);">
+        What You <span class="neon-text">Get</span>
+      </h2>
+    </div>
+
+    <div class="max-w-lg mx-auto">
+      <div class="pricing-card p-10 relative">
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+
+        <!-- Tier label -->
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <div class="section-label mb-1">Per Frame</div>
+            <div class="font-orb font-black text-white" style="font-size:clamp(2.4rem,5vw,3.5rem);">
+              3,000
+              <span class="neon-text" style="font-size:0.45em;">ROBUX</span>
+            </div>
+          </div>
+          <div style="width:64px;height:64px;border:2px solid var(--neon);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,245,196,0.2);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00f5c4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3m0 3h3m-3-3v3"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cyber-divider mb-8"></div>
+
+        <!-- Features -->
+        <div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#00f5c4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div>
+              <div class="text-white font-semibold text-base">High-Resolution Design</div>
+              <div class="text-gray-500 font-mono text-xs mt-0.5">Crisp, sharp assets optimized for Roblox</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#00f5c4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div>
+              <div class="text-white font-semibold text-base">Layered File Delivery</div>
+              <div class="text-gray-500 font-mono text-xs mt-0.5">Fully organized, editable source files included</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#00f5c4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div>
+              <div class="text-white font-semibold text-base">Color &amp; Theme Consistency</div>
+              <div class="text-gray-500 font-mono text-xs mt-0.5">Palette matching your game's visual identity</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#00f5c4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div>
+              <div class="text-white font-semibold text-base">Fast Turnaround</div>
+              <div class="text-gray-500 font-mono text-xs mt-0.5">Delivered within 24 hours — guaranteed</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#00f5c4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div>
+              <div class="text-white font-semibold text-base">Revision Rounds</div>
+              <div class="text-gray-500 font-mono text-xs mt-0.5">Up to 2 free revision passes per frame</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a href="https://discord.com/users/411860478655070208" target="_blank" class="btn-neon w-full justify-center" style="display:flex;">
+            Order Now on Discord
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="cyber-divider"></div>
+
+<!-- ═══════════════════ PORTFOLIO ═══════════════════ -->
+<section id="portfolio" class="py-28 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">// 03 — Portfolio</div>
+      <h2 class="font-orb font-bold text-white" style="font-size:clamp(1.8rem,4vw,3rem);">
+        Previous <span class="neon-text">Work</span>
+      </h2>
+      <p class="text-gray-500 font-mono text-sm mt-3">A selection of UI designs crafted for Roblox games</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- ── Replace the src="" below with your own image URLs ── -->
+
+      <!-- Item 1 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <!-- REPLACE: <img src="YOUR_IMAGE_URL" alt="Project 1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"> -->
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(0,245,196,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 01</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">HUD Design · Inventory UI</div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(168,85,247,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 02</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">Shop System · Menu UI</div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,45,120,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 03</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">Leaderboard · Stats Frame</div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(0,245,196,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 04</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">Main Menu · Game UI</div>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(168,85,247,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 05</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">Notification System · UI Kit</div>
+        </div>
+      </div>
+
+      <!-- Item 6 -->
+      <div class="portfolio-item">
+        <div class="portfolio-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,45,120,0.3)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-xs text-gray-600 z-10">your-image-here.png</span>
+        </div>
+        <div class="overlay">
+          <span class="font-orb text-xs neon-text tracking-widest">VIEW PROJECT</span>
+        </div>
+        <div class="p-4 border-t border-white/5">
+          <div class="font-orb text-sm text-white font-bold">Project Title 06</div>
+          <div class="font-mono text-xs text-gray-500 mt-1">Quest System · Dialogue UI</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- How to add images note -->
+    <div class="mt-10 p-5 border border-dashed border-white/10 max-w-xl mx-auto text-center">
+      <p class="font-mono text-xs text-gray-600 leading-relaxed">
+        💡 To add your images: replace the <code class="text-gray-500">portfolio-placeholder</code> div contents with<br/>
+        <code class="text-gray-400">&lt;img src="YOUR_URL" alt="..." style="width:100%;height:100%;object-fit:cover;"&gt;</code>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="cyber-divider"></div>
+
+<!-- ═══════════════════ CONTACT ═══════════════════ -->
+<section id="contact" class="py-28 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+
+    <div class="section-label mb-6">// 04 — Contact</div>
+
+    <h2 class="font-orb font-black text-white mb-6" style="font-size:clamp(2rem,5vw,4rem);">
+      Ready to <span class="neon-text">Level Up</span><br/>Your Game UI?
+    </h2>
+
+    <p class="text-gray-500 font-mono text-sm mb-14 max-w-md mx-auto leading-relaxed">
+      Hit me up on Discord. I'll respond fast — let's talk about your project and get started.
+    </p>
+
+    <!-- Discord CTA -->
+    <div class="flex justify-center mb-10">
+      <a href="https://discord.com/users/411860478655070208" target="_blank" class="btn-discord">
+        <!-- Discord logo SVG -->
+        <svg width="26" height="26" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60.1 4.9A58.5 58.5 0 0 0 45.6.4a.2.2 0 0 0-.2.1 40.7 40.7 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.6 37.6 0 0 0 25.6.5a.2.2 0 0 0-.2-.1A58.4 58.4 0 0 0 10.9 4.9a.2.2 0 0 0-.1.1C1.6 18.7-.9 32.1.3 45.3v.1a58.7 58.7 0 0 0 17.9 9 .2.2 0 0 0 .2-.1 41.9 41.9 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.7 38.7 0 0 1-5.5-2.6.2.2 0 0 1 0-.4c.4-.3.7-.6 1.1-.8a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.4 0a.2.2 0 0 1 .2 0c.4.3.7.5 1.1.9a.2.2 0 0 1 0 .4 36 36 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47 47 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.5 58.5 0 0 0 17.9-9v-.1c1.5-15.3-2.5-28.6-10.6-40.4a.2.2 0 0 0-.1-.1ZM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 3.9-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 3.9-2.8 7.2-6.4 7.2Z"/>
+        </svg>
+        Reach Me on Discord
+      </a>
+    </div>
+
+    <!-- Decorative terminal box -->
+    <div class="max-w-sm mx-auto border border-white/8 bg-black/30 p-5 text-left" style="border-radius:2px;">
+      <div class="flex gap-2 mb-4">
+        <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:inline-block;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:inline-block;"></span>
+      </div>
+      <p class="font-mono text-xs text-gray-500 leading-6">
+        <span class="text-green-400">$</span> ping <span class="neon-text">discord.com/users/411860478655070208</span><br/>
+        <span class="text-gray-600">REPLY from UI.DEV: bytes=32 time&lt;1ms</span><br/>
+        <span class="neon-text">✓ Designer is online and ready.</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="border-t border-white/5 py-8 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <span class="font-orb text-xs neon-text tracking-widest">UI.DEV © 2025</span>
+    <span class="font-mono text-xs text-gray-700 tracking-widest">ROBLOX UI DESIGNER — ALL RIGHTS RESERVED</span>
+    <a href="https://discord.com/users/411860478655070208" target="_blank" class="font-mono text-xs text-gray-600 hover:text-white transition-colors tracking-widest">DISCORD ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
