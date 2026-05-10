@@ -3,198 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kadirdein77 | UI Designer</title>
+    <title>kadirdein77 | UI/UX Designer</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030303;
+            --bg: #050505;
             --accent: #ffffff;
-            --secondary: #666;
-            --border: rgba(255, 255, 255, 0.08);
+            --secondary: #888;
+            --border: rgba(255, 255, 255, 0.07);
             --card-bg: rgba(255, 255, 255, 0.02);
-            --neon: #00f5c4; /* Senin temandan gelen vurgu rengi */
-            --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            --neon: #00f5c4;
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: #fff; line-height: 1.6; }
 
-        /* Arka Plan Glow */
+        /* Background Elements */
         .glow-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% -20%, #1a1a1a 0%, transparent 50%);
+            background: radial-gradient(circle at 50% -20%, #111 0%, transparent 70%);
             z-index: -1; pointer-events: none;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 30px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
 
-        /* Navigasyon */
-        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+        /* Navigation */
+        nav { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; width: fit-content; }
         .nav-inner {
-            background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 12px 30px; border-radius: 100px; border: 1px solid var(--border);
-            display: flex; gap: 25px;
+            background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            padding: 10px 25px; border-radius: 100px; border: 1px solid var(--border);
+            display: flex; gap: 20px;
         }
-        .nav-inner a { color: var(--secondary); text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.3s; }
+        .nav-inner a { color: var(--secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         .nav-inner a:hover { color: #fff; }
 
         /* Hero Section */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        
-        /* Yuvarlak Profil Fotoğrafı */
-        .profile-wrapper {
-            width: 130px; height: 130px; border-radius: 50%;
-            padding: 6px; border: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent);
-            margin-bottom: 30px; animation: float 6s ease-in-out infinite;
-        }
-        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-
         .badge {
             font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--neon);
-            text-transform: uppercase; letter-spacing: 2px; padding: 6px 16px;
-            background: rgba(0, 245, 196, 0.05); border: 1px solid rgba(0, 245, 196, 0.2);
-            border-radius: 100px; margin-bottom: 20px; display: inline-block;
+            letter-spacing: 2px; padding: 6px 16px; background: rgba(0, 245, 196, 0.05);
+            border: 1px solid rgba(0, 245, 196, 0.2); border-radius: 100px; margin-bottom: 25px;
         }
+        .profile-wrapper {
+            width: 140px; height: 140px; border-radius: 50%; padding: 5px;
+            border: 1px solid var(--border); margin-bottom: 30px; animation: float 6s ease-in-out infinite;
+        }
+        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        h1 { font-size: clamp(40px, 8vw, 85px); font-weight: 800; letter-spacing: -3px; line-height: 0.9; }
+        .uidesigner-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8em; color: var(--secondary); margin-top: 10px; }
 
-        h1 { font-size: clamp(50px, 10vw, 90px); font-weight: 800; letter-spacing: -4px; line-height: 0.9; margin-bottom: 5px; }
-        
-        .uidesigner-tag {
-            font-size: 9px; /* Çok küçük ve zarif */
-            text-transform: uppercase; letter-spacing: 0.7em; color: var(--secondary);
-            font-weight: 400; margin-top: 5px;
-        }
+        /* Sections General */
+        section { padding: 120px 0; }
+        .section-header { margin-bottom: 60px; text-align: center; }
+        .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 5px; color: var(--secondary); display: block; margin-bottom: 15px; }
+        h2 { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
+
+        /* Info Grid (About & Services) */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .info-card { background: var(--card-bg); border: 1px solid var(--border); padding: 40px; border-radius: 24px; transition: var(--transition); }
+        .info-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-5px); }
+        .info-card h3 { margin-bottom: 20px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .info-card p { color: var(--secondary); font-size: 15px; }
 
         /* Portfolio Grid */
-        .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 4px; color: var(--secondary); margin-bottom: 50px; text-align: center; display: block; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; padding-bottom: 100px; }
-        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .work-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px;
-            overflow: hidden; aspect-ratio: 16/10; cursor: pointer; transition: var(--transition);
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px;
+            overflow: hidden; aspect-ratio: 16/10; cursor: zoom-in; transition: var(--transition);
         }
-        .work-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; filter: brightness(0.8); }
-        .work-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-10px); }
-        .work-card:hover img { transform: scale(1.05); filter: brightness(1); }
+        .work-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
+        .work-card:hover img { transform: scale(1.03); filter: brightness(1.1); }
 
-        /* Pricing Section (Senin koddaki özellikler) */
-        .pricing-section { padding: 100px 0; text-align: center; }
+        /* Pricing Card */
+        .pricing-container { display: flex; justify-content: center; }
         .pricing-card {
-            max-width: 500px; margin: 0 auto; background: var(--card-bg);
-            border: 1px solid var(--border); border-radius: 32px; padding: 50px;
-            transition: var(--transition);
+            width: 100%; max-width: 600px; background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            border: 1px solid var(--border); padding: 60px; border-radius: 32px; position: relative;
         }
-        .pricing-card:hover { border-color: var(--neon); box-shadow: 0 0 50px rgba(0, 245, 196, 0.05); }
-        .price { font-size: 48px; font-weight: 800; margin: 20px 0; }
-        .price span { font-size: 14px; color: var(--neon); font-family: 'JetBrains Mono', monospace; }
+        .pricing-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--neon), transparent); }
+        .price { font-size: 56px; font-weight: 800; margin: 20px 0; color: #fff; }
+        .price span { font-size: 16px; color: var(--neon); font-family: 'JetBrains Mono'; }
         
-        .features { list-style: none; text-align: left; margin: 30px 0; }
-        .features li { 
-            font-size: 14px; color: var(--secondary); margin-bottom: 15px; 
-            display: flex; align-items: center; gap: 10px;
-        }
-        .features li::before { content: "✓"; color: var(--neon); font-weight: bold; }
+        .tos-list { list-style: none; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); }
+        .tos-list li { font-size: 13px; color: var(--secondary); margin-bottom: 12px; display: flex; gap: 10px; }
+        .tos-list li::before { content: "→"; color: var(--neon); }
 
-        /* Contact Section */
+        /* Lightbox (Tam Ekran Resim) */
+        #lightbox {
+            position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center;
+            cursor: zoom-out; backdrop-filter: blur(10px);
+        }
+        #lightbox img { max-width: 90%; max-height: 85%; border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+
         .contact-btn {
-            display: inline-flex; align-items: center; gap: 12px;
-            background: #fff; color: #000; padding: 18px 40px;
-            border-radius: 100px; text-decoration: none; font-weight: 600;
-            font-size: 15px; transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 12px; background: #fff; color: #000;
+            padding: 20px 45px; border-radius: 100px; text-decoration: none; font-weight: 700;
+            margin-top: 30px; transition: var(--transition);
         }
         .contact-btn:hover { transform: scale(1.05); background: var(--neon); }
 
-        /* Animasyonlar */
+        /* Animations */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); }
-        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s cubic-bezier(0.23, 1, 0.32, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 50px; } }
     </style>
 </head>
 <body>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Full Screen">
+    </div>
 
     <div class="glow-overlay"></div>
 
     <nav>
         <div class="nav-inner">
             <a href="#home">Home</a>
+            <a href="#about">About</a>
             <a href="#work">Work</a>
             <a href="#pricing">Pricing</a>
-            <a href="#contact">Contact</a>
         </div>
     </nav>
 
     <div class="container">
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="hero" id="home">
-            <div class="badge scroll-reveal">Available for Work</div>
-            <div class="profile-wrapper scroll-reveal">
-                <img src="profil-fotografin.jpg" alt="kadirdein77" class="profile-img">
+            <div class="badge reveal">Open for Commissions</div>
+            <div class="profile-wrapper reveal">
+                <img src="profil_fotografin.jpg" alt="kadirdein77" class="profile-img">
             </div>
-            <h1 class="scroll-reveal">kadirdein77</h1>
-            <p class="uidesigner-tag scroll-reveal">uidesigner</p>
+            <h1 class="reveal">kadirdein77</h1>
+            <p class="uidesigner-tag reveal">uidesigner</p>
+        </section>
+
+        <!-- About & Services -->
+        <section id="about">
+            <div class="section-header">
+                <span class="section-label reveal">Professional Profile</span>
+                <h2 class="reveal">Creative & Strategic UI/UX</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-card reveal">
+                    <h3>Who I Am</h3>
+                    <p>Roblox platformunda profesyonel UI/UX tasarımcısıyım. "Blade Ball" tarzı dark-tech ve neon estetiklerini modern bir minimalizmle harmanlıyorum. Sadece tasarım değil, kullanıcı deneyimini de ön planda tutuyorum.</p>
+                </div>
+                <div class="info-card reveal">
+                    <h3>What I Offer</h3>
+                    <p>Oyun arayüzleri (GUI), HUD tasarımı, envanter sistemleri ve ikon setleri geliştiriyorum. Adobe Photoshop ve Roblox Studio üzerinde uzmanlaşmış bir iş akışına sahibim.</p>
+                </div>
+            </div>
         </section>
 
         <!-- Portfolio -->
         <section id="work">
-            <span class="section-label scroll-reveal">Selected Works</span>
+            <div class="section-header">
+                <span class="section-label reveal">Portfolio</span>
+                <h2 class="reveal">Selected Projects</h2>
+            </div>
             <div class="grid">
-                <div class="work-card scroll-reveal"><img src="1.png"></div>
-                <div class="work-card scroll-reveal"><img src="2.png"></div>
-                <div class="work-card scroll-reveal"><img src="3.png"></div>
-                <div class="work-card scroll-reveal"><img src="4.png"></div>
+                <div class="work-card reveal" onclick="openLightbox('img1.png')"><img src="img1.png"></div>
+                <div class="work-card reveal" onclick="openLightbox('img2.png')"><img src="img2.png"></div>
+                <div class="work-card reveal" onclick="openLightbox('img3.png')"><img src="img3.png"></div>
+                <div class="work-card reveal" onclick="openLightbox('img4.png')"><img src="img4.png"></div>
             </div>
         </section>
 
-        <!-- Pricing -->
-        <section class="pricing-section" id="pricing">
-            <span class="section-label scroll-reveal">// Pricing</span>
-            <div class="pricing-card scroll-reveal">
-                <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--secondary);">PER FRAME</p>
-                <div class="price">3,000 <span>ROBUX</span></div>
-                <ul class="features">
-                    <li>High-Resolution Assets</li>
-                    <li>Layered Source Files (PSD/RBX)</li>
-                    <li>Theme Consistency</li>
-                    <li>24H Guaranteed Delivery</li>
-                    <li>Unlimited Revision Rounds</li>
-                </ul>
-                <a href="https://discord.com/users/411860478655070208" class="contact-btn">Order on Discord</a>
+        <!-- Pricing & ToS -->
+        <section id="pricing">
+            <div class="section-header">
+                <span class="section-label reveal">Investment</span>
+                <h2 class="reveal">Pricing & Terms</h2>
             </div>
-        </section>
-
-        <!-- Contact -->
-        <section id="contact" style="padding: 100px 0; text-align: center;">
-            <h2 class="scroll-reveal" style="font-size: 40px; margin-bottom: 20px;">Ready to Level Up?</h2>
-            <p class="scroll-reveal" style="color: var(--secondary); margin-bottom: 40px;">Let's build something amazing together for your Roblox project.</p>
-            <a href="https://discord.com/users/411860478655070208" class="contact-btn scroll-reveal" style="background: transparent; color: #fff; border: 1px solid var(--border);">
-                DM me on Discord
-            </a>
+            <div class="pricing-container">
+                <div class="pricing-card reveal">
+                    <p style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--secondary);">STARTING FROM</p>
+                    <div class="price">3,000 <span>ROBUX / FRAME</span></div>
+                    
+                    <p style="color: var(--secondary); font-size: 14px;">Tüm tasarımlar yüksek çözünürlüklü assetler ve tam düzenlenebilir kaynak dosyalarıyla teslim edilir.</p>
+                    
+                    <ul class="tos-list">
+                        <li>Ödemeler iş başlangıcında %50 veya tam peşin alınır.</li>
+                        <li>Teslimat süresi projenin büyüklüğüne göre 24-72 saat arasıdır.</li>
+                        <li>Tüm tasarımlar için sınırsız revizyon hakkı sunulur.</li>
+                        <li>Dosyalar .PSD veya doğrudan Roblox dosya formatında (.rbxm) iletilir.</li>
+                    </ul>
+                    
+                    <a href="https://discord.com/users/411860478655070208" class="contact-btn">Get Started on Discord</a>
+                </div>
+            </div>
         </section>
     </div>
 
-    <footer style="padding: 50px 0; text-align: center; border-top: 1px solid var(--border); margin-top: 100px;">
-        <p style="font-size: 11px; color: var(--secondary); letter-spacing: 2px;">KADIRDEIN77 © 2026</p>
+    <footer style="padding: 60px 0; text-align: center; border-top: 1px solid var(--border);">
+        <p style="font-size: 11px; color: var(--secondary); letter-spacing: 3px;">KADIRDEIN77 • DESIGN PORTFOLIO © 2026</p>
     </footer>
 
     <script>
-        // Scroll Reveal Mantığı
+        // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Mouse takibiyle arka planda çok hafif parlayan ışık
+        // Lightbox System
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lb.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Sayfa kaymasını engelle
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Mouse Tracker (Background effect)
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             document.querySelector('.glow-overlay').style.background = `
-                radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.03) 0%, transparent 40%),
-                radial-gradient(circle at 50% -20%, #1a1a1a 0%, transparent 50%)
+                radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,0.04) 0%, transparent 40%),
+                radial-gradient(circle at 50% -20%, #111 0%, transparent 70%)
             `;
         });
     </script>
